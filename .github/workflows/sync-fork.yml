@@ -1,0 +1,19 @@
+name: Sync fork with upstream
+
+on:
+  schedule:
+    - cron: '0 4 * * *'  # daily at 4am UTC
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Merge upstream docusealco/docuseal into master
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api -X POST "repos/${{ github.repository }}/merge-upstream" \
+            -f branch=master
